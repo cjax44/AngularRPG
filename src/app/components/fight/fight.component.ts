@@ -15,6 +15,7 @@ enum Teams {
   styleUrls: ['./fight.component.css']
 })
 export class FightComponent implements OnInit {
+ 
 
   heroTurn: boolean = true;
   actionDelay: number = this.gameControllerService.actionDelay;
@@ -96,10 +97,58 @@ export class FightComponent implements OnInit {
     if(target.isIncapacitated) {
       this.displayMessage = `That target is already incapacitated`;
     }
-// add sp atk
-    // if(this.currentCharacter instanceof Monster && target instanceof Hero){
+// sp atk
+    if(this.currentCharacter instanceof Monster && target instanceof Hero){
+      if(target.hasTrapDefense) {
+        this.currentCharacter.isTrapped = true;
+
+        if(target.hasDamagingTrap) {
+          let damage = Math.floor(Math.random() * 8) + 1;
+          this.currentCharacter.currentHealth -= damage;
+          this.displayMessage = `${target.name} was protected by a mage ward. ${this.currentCharacter.name} was shocked by the ward and took ${damage} damage.`
+          if(this.currentCharacter.currentHealth <= 0) {
+            this.currentCharacter.isIncapacitated = true;
+            this.enemiesIncapacitated++;
+          }
+        } else {
+          this.displayMessage = `${target.name} was protected by a ward. ${this.currentCharacter.name} is stunned.`
+        }
+
+        target.hasTrapDefense = false;
+        target.hasDamagingTrap = false;
+        setTimeout(() => {
+          this.checkIfWin();
+        }, this.actionDelay);
+        return;
+      }
       
-    // }
+    }
+
+    if(this.selectedAction === FightOptions.attack) {
+      this.freezeAction = true;
+      this.attack(target);
+      
+    } else if (this.currentCharacter instanceof Hero 
+              && this.currentCharacter.level >2 
+              && this.selectedAction === FightOptions.specialAttack) {
+        const upgraded: boolean = this.currentCharacter.level > 5;
+
+        if (this.currentCharacter instanceof Warrior) {
+          this.warriorSpecialAttack(target, upgraded);
+        }
+        if (this.currentCharacter instanceof Mage) {
+          this.mageSpecialAttack(target, upgraded);
+        }
+        if (this.currentCharacter instanceof Rogue) {
+          this.rogueSpecialAttack(target, upgraded);
+        }
+        if (this.currentCharacter instanceof Priest) {
+          this.priestSpecialAttack(target, upgraded);
+        }
+
+      } else {
+        this.displayMessage = `Please select an action option.`;
+      }
 
 // reg
     if(this.selectedAction === FightOptions.attack) {
@@ -107,13 +156,158 @@ export class FightComponent implements OnInit {
       this.attack(target);
 
     } 
-    // else if (this.currentCharacter instanceof Hero) [
+    else if (this.currentCharacter instanceof Hero) [
 
-    // ] 
+    ] 
     else {
       this.displayMessage = `Please select an action option`;
     }
   }
+
+  warriorSpecialAttack(target: BaseCharacter, upgraded: boolean) {
+    if(!(target instanceof Monster)) {
+      this.displayMessage = `Only enemies can be targeted by a warrior's special attack`;
+      return;
+    }
+
+    this.selectedTargets.push(target);
+
+    if(this.selectedTargets.length < 2) {
+      this.displayMessage = `Select a second target for your warrior's cleave attack!`
+    } else if (this.currentCharacter instanceof Hero) {
+      this.freezeAction = true;
+      this.currentCharacter.turnsUntilSpecialAvailableAgain = this.turnsBetweenSpecial;
+      let doubleAttackPenalty = upgraded ? 0 : 3;
+      let firstTarget: BaseCharacter = this.selectedTargets[0];
+      let secondTarget: BaseCharacter = this.selectedTargets[1];
+
+      if(this.currentCharacter.attack() - doubleAttackPenalty >= firstTarget.barriers.attack) {
+        let damage = this.currentCharacter.dealDamage();
+        firstTarget.currentHealth -= damage;
+        this.displayMessage = `${this.currentCharacter.name} hit ${firstTarget.name} dealing ${damage} damage.`;
+        if (firstTarget.currentHealth <= 0) {
+          firstTarget.isIncapacitated = true;
+          this.enemiesIncapacitated++;
+        }
+      } else {
+        this.displayMessage = `${this.currentCharacter.name} missed.`
+      }
+
+      setTimeout(() => {
+        if(this.currentCharacter.attack() - doubleAttackPenalty >= secondTarget.barriers.attack) {
+        let damage = this.currentCharacter.dealDamage();
+        secondTarget.currentHealth -= damage;
+        this.displayMessage = `${this.currentCharacter.name} hit ${secondTarget.name} dealing ${damage} damage.`;
+        if (secondTarget.currentHealth <= 0) {
+          secondTarget.isIncapacitated = true;
+          this.enemiesIncapacitated++;
+        }
+      } else {
+        this.displayMessage = `${this.currentCharacter.name} missed.`
+      }
+
+      setTimeout(() => {
+        this.selectedTargets = [];
+        this.checkIfWin();
+      }, this.actionDelay);
+    }, this.actionDelay);
+    } 
+  }
+
+  mageSpecialAttack(target: BaseCharacter, upgraded: boolean) {
+    if (!(target instanceof Hero)) {
+      this.displayMessage = `Only a hero can be targeted with a magic ward.`
+      return;
+    }
+
+    if (target.hasTrapDefense) {
+      this.displayMessage = `Target already has a ward in place`
+      return;
+    }
+    this.freezeAction = true;
+    if (this.currentCharacter instanceof Hero) {
+      this.currentCharacter.turnsUntilSpecialAvailableAgain = this.turnsBetweenSpecial;
+
+    }
+
+    this.displayMessage = `${this.currentCharacter.name} has placed a magic ward to protect ${target.name}`;
+    target.hasTrapDefense = true;
+    target.hasDamagingTrap = upgraded;
+    setTimeout(() => {
+      this.nextTurn();
+    }, this.actionDelay);
+    
+  }
+
+  rogueSpecialAttack(target: BaseCharacter, upgraded: boolean) {
+    if(!(target instanceof Monster)) {
+      this.displayMessage = `You can only poison an enemy`;
+      return;
+    }
+
+    this.freezeAction = true;
+
+    if(this.currentCharacter instanceof Hero) {
+      this.currentCharacter.turnsUntilSpecialAvailableAgain = this.turnsBetweenSpecial;
+    }
+
+    target.isStrongPoison = upgraded;
+    target.poisonStacks++;
+    this.displayMessage = `${target.name} was poisoned. (${target.poisonStacks}) stacks`;
+    setTimeout(() => {
+      this.nextTurn();
+    }, this.actionDelay);
+  }
+
+  priestSpecialAttack(target: BaseCharacter, upgraded: boolean) {
+    if(!(target instanceof Hero)) {
+      this.displayMessage = `You must target an ally to heal`;
+      return;
+    }
+
+    if(upgraded) {
+      this.selectedTargets.push(target);
+
+      if(this.selectedTargets.length <2) {
+        this.displayMessage = `Select a second target to heal`;
+        return;
+      }
+      this.freezeAction = true;
+      if (this.currentCharacter instanceof Hero) {
+        this.currentCharacter.turnsUntilSpecialAvailableAgain = this.turnsBetweenSpecial;
+
+        let heal1 = Math.floor(Math.random() * 4) + 1 + this.currentCharacter.skills.intelligence;
+        let heal2 = Math.floor(Math.random() * 4) + 1 + this.currentCharacter.skills.intelligence;
+        let target1 = this.selectedTargets[0];
+        let target2 = this.selectedTargets[1];
+
+        target1.currentHealth = target1.currentHealth + heal1 > target1.maxHealth ? target1.maxHealth : target1.currentHealth + heal1;
+        this.displayMessage = `${target1.name} has been healed for ${heal1} health`;
+
+        setTimeout(() => {
+          target2.currentHealth = target2.currentHealth + heal2 > target2.maxHealth ? target2.maxHealth : target2.currentHealth + heal2;
+          this.displayMessage = `${target2.name} has been healed for ${heal2} health`;
+          this.selectedTargets = [];
+          setTimeout(() => {
+            this.nextTurn();
+          }, this.actionDelay);
+        }, this.actionDelay);
+      }
+    } else {
+      this.freezeAction = true;
+      if (this.currentCharacter instanceof Hero) {
+        this.currentCharacter.turnsUntilSpecialAvailableAgain = this.turnsBetweenSpecial;
+      }
+      let healing = Math.floor(Math.random() * 4) + 1 + this.currentCharacter.skills.intelligence;
+      target.currentHealth = target.currentHealth + healing > target.maxHealth ? target.maxHealth : target.currentHealth + healing;
+      this.displayMessage = `${target.name} was healed for ${healing} health`;
+      setTimeout(() => {
+        this.nextTurn();
+      }, this.actionDelay);
+    }
+  }
+
+
 
   attack(target: BaseCharacter) {
     this.availableTargets = Teams.none;
@@ -148,7 +342,7 @@ export class FightComponent implements OnInit {
       return; 
     }
     if (this.heroesIncapacitated === this.heroParty.length) {
-      this.displayMessage = `All heroes have been defeated`;
+      this.displayMessage = `All heroes have been defeated.`;
       this.showGameOverButton = true;
       this.gameControllerService.isFighting = false;
       return;
@@ -157,13 +351,28 @@ export class FightComponent implements OnInit {
   }
 
   nextTurn() {
-    // spc atk stuff
-    // if(this.currentCharacter instanceof Monster) {
+    //sp atk
+    if(this.currentCharacter instanceof Monster
+        && this.currentCharacter.poisonStacks
+        && !this.currentCharacter.hasTakenPoisonDamageThisTurn) {
 
-    // }
-    // if(this.currentCharacter instanceof Monster && this.currentCharacter.hasTakenPoisonDamageThisTurn) {
-
-    // }
+          this.currentCharacter.hasTakenPoisonDamageThisTurn = true;
+          let maxDamage = this.currentCharacter.isStrongPoison ? 6 : 3;
+          let poisonDamage = (Math.floor(Math.random() * maxDamage) + 1) * this.currentCharacter.poisonStacks;
+          this.currentCharacter.currentHealth -= poisonDamage;
+          this.displayMessage = `${this.currentCharacter.name} took ${poisonDamage} poison damage.`
+          if (this.currentCharacter.currentHealth <= 0) {
+            this.currentCharacter.isIncapacitated = true;
+            this.enemiesIncapacitated++;
+          }
+          setTimeout(() => {
+            this.checkIfWin();
+          }, this.actionDelay);
+          return;
+    }
+    if(this.currentCharacter instanceof Monster && this.currentCharacter.hasTakenPoisonDamageThisTurn) {
+      this.currentCharacter.hasTakenPoisonDamageThisTurn = false;
+    }
 
     this.availableTargets = Teams.none;
     this.selectedAction = FightOptions.none;
@@ -205,7 +414,11 @@ export class FightComponent implements OnInit {
 
   takeEnemyTurn() {
     if(this.currentCharacter instanceof Monster && this.currentCharacter.isTrapped){
-      
+      this.currentCharacter.isTrapped = false;
+      this.displayMessage = `${this.currentCharacter.name} recovers from the magic ward.`
+      setTimeout(() => {
+          this.nextTurn();
+      }, this.actionDelay);
     } else {
       let target: Hero;
       this.selectedAction = FightOptions.attack;
