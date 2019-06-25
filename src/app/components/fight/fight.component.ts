@@ -91,7 +91,7 @@ export class FightComponent implements OnInit {
   }
 
   tryAttack(target: BaseCharacter) {
-    if(this.freezeAction) {
+    if(this.freezeAction && this.heroTurn) {
       return;
     }
     if(target.isIncapacitated) {
@@ -151,17 +151,17 @@ export class FightComponent implements OnInit {
       }
 
 // reg
-    if(this.selectedAction === FightOptions.attack) {
-      this.freezeAction = true;
-      this.attack(target);
+    // if(this.selectedAction === FightOptions.attack) {
+    //   this.freezeAction = true;
+    //   this.attack(target);
 
-    } 
-    else if (this.currentCharacter instanceof Hero) [
+    // } 
+    // else if (this.currentCharacter instanceof Hero) [
 
-    ] 
-    else {
-      this.displayMessage = `Please select an action option`;
-    }
+    // ] 
+    // else {
+    //   this.displayMessage = `Please select an action option`;
+    // }
   }
 
   warriorSpecialAttack(target: BaseCharacter, upgraded: boolean) {

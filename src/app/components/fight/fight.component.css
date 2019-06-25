@@ -58,6 +58,7 @@
 
 .action-option {
     cursor: pointer;
+    background-color: whitesmoke;
 }
 
 .action-option.selected {
