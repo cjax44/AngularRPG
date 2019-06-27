@@ -50,7 +50,7 @@ export class GameControllerService {
         this.currentChapter.ifSucceed.forEach(reward => {
             switch(reward) {
                 case SuccessOptions.rewardExperience:
-                    messages.push(`Each member of your part has gained ${this.currentChapter.rewards.experience} experience`);
+                    messages.push(`Each member of your party has gained ${this.currentChapter.rewards.experience} experience`);
                     this.heroParty.forEach(hero => {
                         hero.experience += this.currentChapter.rewards.experience;
                         if (hero.experience >= ExperienceToLevel[hero.level]) {

@@ -5,7 +5,7 @@
 <!-- hero stuff -->
     <div class="col-2 heroes d-flex flex-column">
       <div *ngFor="let hero of heroParty" class="hero d-flex flex-column" [ngClass]="{'active': currentCharacter === hero, 'targetable': availableTargets === _teams.heroes && !hero.isIncapacitated}" (click)="tryAttack(hero)">
-        <img src="hero.spriteUrl" [alt]="hero.characterRole" class="mx-auto" />
+        <img src="{{hero.spriteUrl}}" [alt]="hero.characterRole" class="mx-auto" />
          <div class="health-bar progress">
            <div class="progress-bar" [style.width]="hero.currentHealth < 0 ? '0%' : (hero.currentHealth/hero.maxHealth) * 100 + '%'">
             {{hero.currentHealth > 0 ? hero.currentHealth + "/" + hero.maxHealth : ""}}
@@ -33,7 +33,7 @@
 
     <div class="col-2 enemies d-flex flex-column">
         <div *ngFor="let enemy of enemyParty" class="enemy d-flex flex-column" [ngClass]="{'active': currentCharacter === enemy, 'targetable': availableTargets === _teams.enemies && !enemy.isIncapacitated}" (click)="tryAttack(enemy)">
-          <img src="enemy.spriteUrl" [alt]="enemy.characterRole" class="mx-auto" />
+          <img src="{{enemy.spriteUrl}}" [alt]="enemy.characterRole" class="mx-auto" />
            <div class="health-bar progress">
              <div class="progress-bar" [style.width]="enemy.currentHealth < 0 ? '0%' : (enemy.currentHealth/enemy.maxHealth) * 100 + '%'">
               {{enemy.currentHealth > 0 ? enemy.currentHealth + "/" + enemy.maxHealth : ""}}
