@@ -187,6 +187,27 @@ export class Warrior extends Hero {
     }
 }
 
+export class Critter extends Hero {
+
+    constructor(name, gender, race, level, health, skills, weapon, armor) {
+        super(name, gender, race, level, health, skills, weapon, armor);
+
+        this.characterRole = ClassOptions.warrior;
+        this.skills.sneak += 2;
+        this.skills.attack++;
+        this.skills.persuade--;
+        this.skills.intelligence--;
+        this.spriteUrl = this.gender === GenderOptions.male ? "./assets/squirrel.png" : "./assets/squirrel.png" ;
+        
+    }
+
+    levelUp():void {
+        this.maxHealth = Math.floor(Math.random() * 10) +1;
+        this.currentHealth = this.maxHealth;
+        super.levelUp();
+    }
+}
+
 export class Mage extends Hero {
 
     constructor(name, gender, race, level, health, skills, weapon, armor) {

@@ -7,7 +7,7 @@ import { ChapterFour } from './chapter4';
 export const ChapterThree: Chapter = {
     
     story: [ `After making it by the wolf you come upon a small camp.`,
-             `No sneaking by this one though, they're already aware of your presence. They seem nice though, maybe a conversation can be had`,
+             `No sneaking by this one though, they're already aware of your presence. They seem nice, maybe a conversation can be had`,
              `Three of the armed guards approach you, how do you proceed?`,         
 
     ],

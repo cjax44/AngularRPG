@@ -1,5 +1,5 @@
 import { Chapter, CharacterAction, FailureOptions, SuccessOptions } from '../models/chapter';
-import { Weapon, Armor, Monster, Warrior } from '../models/characters';
+import { Weapon, Armor, Monster, Warrior, Critter } from '../models/characters';
 import { GenderOptions, RaceOptions, ClassOptions } from '../models/character-options';
 import { ChapterTwo } from './chapter2';
 
@@ -31,8 +31,8 @@ export const ChapterOne: Chapter = {
 
     rewards: {
         experience: 500,
-        equipment: [new Weapon("Stick", 1, 3)],
-        newHero: new Warrior("Johnny", GenderOptions.male, RaceOptions.human, 1, 10, {attack:2, sneak:1, persuade:1, intelligence: 1}, new Weapon("Sword", 1, 4), new Armor("Clothes", 0))
+        equipment: [new Weapon("Stick", 1, 3), new Armor("Pelt", 1)],
+        newHero: new Critter("Squeaky", GenderOptions.male, RaceOptions.human, 1, 10, {attack:2, sneak:1, persuade:1, intelligence: 1}, new Weapon("Squirrel Claws", 1, 2), new Armor("Fur", 1))
     },
 
     nextChapter: ChapterTwo

@@ -2,7 +2,8 @@ export enum RaceOptions {
     human = "Human",
     dwarf = "Dwarf",
     elf ="Elf",
-    orc = "Orc"
+    orc = "Orc",
+    squirrel = "Squirrel"
 
 }
 
@@ -10,7 +11,8 @@ export enum ClassOptions {
     warrior = "Warrior",
     mage = "Mage",
     rogue = "Rogue",
-    priest = "Priest"
+    priest = "Priest",
+    critter = "Critter"
 
 }
 
@@ -25,7 +27,9 @@ export const CharacterOptions = {
         RaceOptions.human,
         RaceOptions.dwarf,
         RaceOptions.elf,
-        RaceOptions.orc
+        RaceOptions.orc,
+        
+        
     ],
     classes: [
         ClassOptions.mage,

@@ -2,6 +2,7 @@ import { Chapter, CharacterAction, FailureOptions, SuccessOptions } from '../mod
 import { Weapon, Armor, Monster, Warrior } from '../models/characters';
 import { GenderOptions, RaceOptions, ClassOptions } from '../models/character-options';
 import { ChapterTwo } from './chapter2';
+import { ChapterFive } from './chapter5';
 
 export const ChapterFour: Chapter = {
     
@@ -26,7 +27,7 @@ export const ChapterFour: Chapter = {
     ifSucceed: [
         SuccessOptions.rewardExperience,
         SuccessOptions.rewardEquipment,
-        SuccessOptions.addHeroToParty
+        // SuccessOptions.addHeroToParty
     ],
 
     rewards: {
@@ -35,6 +36,6 @@ export const ChapterFour: Chapter = {
         newHero: null,
     },
 
-    nextChapter: null
+    nextChapter: ChapterFive
 
 }
