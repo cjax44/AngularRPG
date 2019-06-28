@@ -121,7 +121,7 @@ export class Hero extends BaseCharacter {
     characterRole: string;
     experience: number;
     level: number;
-    availableSkillPoints: number;
+    availableSkillPoints: number = 0;
     hasTrapDefense: boolean;
     hasDamagingTrap: boolean;
     turnsUntilSpecialAvailableAgain: number;
@@ -235,7 +235,7 @@ export class Priest extends Hero {
     constructor(name, gender, race, level, health, skills, weapon, armor) {
         super(name, gender, race, level, health, skills, weapon, armor);
 
-        this.characterRole = ClassOptions.warrior;
+        this.characterRole = ClassOptions.priest;
         this.skills.persuade += 2;
         this.skills.intelligence += 1;
         this.skills.sneak--;

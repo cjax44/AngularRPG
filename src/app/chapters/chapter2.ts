@@ -1,6 +1,7 @@
 import { Chapter, CharacterAction, FailureOptions, SuccessOptions } from '../models/chapter';
 import { Weapon, Armor, Monster, Warrior } from '../models/characters';
 import { GenderOptions, RaceOptions, ClassOptions } from '../models/character-options';
+import { ChapterThree } from './chapter3';
 
 export const ChapterTwo: Chapter = {
     
@@ -34,6 +35,6 @@ export const ChapterTwo: Chapter = {
         newHero: null,
     },
 
-    nextChapter: null
+    nextChapter: ChapterThree
 
 }
