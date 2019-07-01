@@ -2,6 +2,7 @@ import { Chapter, CharacterAction, FailureOptions, SuccessOptions } from '../mod
 import { Weapon, Armor, Monster, Warrior } from '../models/characters';
 import { GenderOptions, RaceOptions, ClassOptions } from '../models/character-options';
 import { ChapterTwo } from './chapter2';
+import { ChapterSeven } from './chapter7';
 
 export const ChapterSix: Chapter = {
     
@@ -29,16 +30,15 @@ export const ChapterSix: Chapter = {
     ifFail: FailureOptions.nextChapter,
     ifSucceed: [
         SuccessOptions.rewardExperience,
-        SuccessOptions.rewardEquipment,
-        SuccessOptions.addHeroToParty
+        
     ],
 
     rewards: {
-        experience: 1750,
-        equipment: [new Armor("Troll Belt", 8)],
+        experience: 2750,
+        equipment: null,
         newHero: null,
     },
 
-    nextChapter: null
+    nextChapter: ChapterSeven
 
 }

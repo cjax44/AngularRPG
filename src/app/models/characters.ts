@@ -181,7 +181,7 @@ export class Warrior extends Hero {
     }
 
     levelUp():void {
-        this.maxHealth = Math.floor(Math.random() * 10) +1;
+        this.maxHealth += Math.floor(Math.random() * 4) +1;
         this.currentHealth = this.maxHealth;
         super.levelUp();
     }
@@ -202,7 +202,7 @@ export class Critter extends Hero {
     }
 
     levelUp():void {
-        this.maxHealth = Math.floor(Math.random() * 10) +1;
+        this.maxHealth += Math.floor(Math.random() * 2) +1;
         this.currentHealth = this.maxHealth;
         super.levelUp();
     }
@@ -223,7 +223,7 @@ export class Mage extends Hero {
     }
 
     levelUp():void {
-        this.maxHealth = Math.floor(Math.random() * 8) +1;
+        this.maxHealth += Math.floor(Math.random() * 3) +1;
         this.currentHealth = this.maxHealth;
         super.levelUp();
     }
@@ -244,7 +244,7 @@ export class Rogue extends Hero {
     }
 
     levelUp():void {
-        this.maxHealth = Math.floor(Math.random() * 8) +1;
+        this.maxHealth += Math.floor(Math.random() * 3) +1;
         this.currentHealth = this.maxHealth;
         super.levelUp();
     }
@@ -266,7 +266,7 @@ export class Priest extends Hero {
     }
 
     levelUp():void {
-        this.maxHealth = Math.floor(Math.random() * 6) +1;
+        this.maxHealth += Math.floor(Math.random() * 2) +1;
         this.currentHealth = this.maxHealth;
         super.levelUp();
     }

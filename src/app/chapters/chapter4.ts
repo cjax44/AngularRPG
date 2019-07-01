@@ -9,7 +9,7 @@ export const ChapterFour: Chapter = {
     story: [ `With Guard Geoffrey and your pet squirrel on your team you feel unstoppable.`,
              `Using the steeds found back at the guard encampment you can now travel much farther and faster.`,
              `"WHAT THE HELL IS THAT?" says Geoffrey.`,
-             `Before you have a chance to answer you're dismounted from your horse with a violent thump`,         
+             `Before you have a chance to answer you're dismounted from your horse with a violent thump!`,         
 
     ],
 
